@@ -105,7 +105,7 @@ cat >> /etc/contrail/contrail-collector.conf << EOM
 
 [REDIS]
 port=$REDIS_SERVER_PORT
-server=127.0.0.1
+server=$REDIS_SERVER
 password=$REDIS_SERVER_PASSWORD
 EOM
 
