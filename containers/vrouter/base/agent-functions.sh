@@ -524,6 +524,14 @@ function init_vhost0() {
         ifup vhost0 || { echo "ERROR: failed to ifup vhost0." && ret=1; }
     else
         echo "INFO: there is no ifcfg-$phys_int and ifcfg-vhost0, so initialize vhost0 manually"
+
+        # copy per-link dns settings from physical interface to vhost0
+        echo "INFO: copy per-link dns settings"
+        phys_int_index=$(ip --oneline link show dev ${phys_int} | awk -F ':' '{print $1}')
+        vhost0_int_index=$(ip --oneline link show dev vhost0 | awk -F ':' '{print $1}')
+        python /copy_dns.py ${phys_int_index} ${vhost0_int_index}
+        echo "INFO: per-link dns settings has been copied to vhost0 interface"
+
         if ! is_dpdk ; then
             # TODO: switch off dhcp on phys_int permanently
             kill_dhcp_clients ${phys_int}
